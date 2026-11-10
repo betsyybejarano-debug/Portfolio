@@ -1,433 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Betsy Bejarano — Civil engineering student at Northwestern University. Explore engineering projects, leadership, and interests." />
-  <title>betsyybejarano | Civil Engineering Portfolio</title>
-  <style>
-    :root {
-      --purple: #4e2a84;
-      --purple-dark: #32145f;
-      --ink: #20212a;
-      --muted: #666b76;
-      --paper: #fbfaf8;
-      --white: #ffffff;
-      --line: #e7e4eb;
-      --lavender: #f0ebf7;
-      --blue: #eaf0f5;
-      --max: 1160px;
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0; background: var(--paper); color: var(--ink);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.6;
-    }
-    a { color: inherit; }
-    .wrap { width: min(var(--max), calc(100% - 44px)); margin: 0 auto; }
-    .nav {
-      position: sticky; top: 0; z-index: 10; background: rgba(251,250,248,.94);
-      backdrop-filter: blur(14px); border-bottom: 1px solid rgba(231,228,235,.85);
-    }
-    .nav-inner { min-height: 74px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-    .brand { text-decoration: none; font-weight: 750; letter-spacing: -.04em; font-size: 1.08rem; }
-    .brand span { color: var(--purple); }
-    .nav-links { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
-    .nav-links a { text-decoration: none; font-size: .88rem; color: #4f5260; }
-    .nav-links a:hover { color: var(--purple); }
-    .menu-button { display:none; border:1px solid var(--line); background:white; border-radius:9px; padding:8px 12px; }
-    .hero { padding: 100px 0 88px; }
-    .eyebrow { color: var(--purple); text-transform: uppercase; letter-spacing: .16em; font-weight: 750; font-size: .74rem; }
-    h1 { font-size: clamp(3rem, 7vw, 5.9rem); line-height: .98; letter-spacing: -.065em; margin: 18px 0 20px; max-width: 850px; }
-    .hero h1 em { color: var(--purple); font-style: normal; }
-    .hero-copy { font-size: clamp(1.1rem, 2vw, 1.35rem); color: #555966; max-width: 690px; }
-    .hero-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:30px; }
-    .button { display:inline-flex; align-items:center; justify-content:center; padding:12px 19px; border-radius:8px; text-decoration:none; font-weight:700; font-size:.92rem; transition:.2s ease; }
-    .button.primary { background:var(--purple); color:white; }
-    .button.primary:hover { background:var(--purple-dark); transform:translateY(-1px); }
-    .button.secondary { border:1px solid #cfc8d9; color:var(--purple); background:transparent; }
-    .button.secondary:hover { background:var(--lavender); }
-    .hero-note { margin-top:50px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:.9rem; display:flex; gap:24px; flex-wrap:wrap; }
-    section { padding:82px 0; border-top:1px solid var(--line); }
-    .section-head { display:flex; justify-content:space-between; align-items:end; gap:24px; margin-bottom:34px; }
-    .section-kicker { color:var(--purple); text-transform:uppercase; letter-spacing:.15em; font-size:.72rem; font-weight:800; }
-    h2 { font-size:clamp(2rem, 4vw, 3.1rem); letter-spacing:-.05em; line-height:1.08; margin:8px 0 0; }
-    .section-intro { max-width:540px; color:var(--muted); margin:0; }
-    .about-grid { display:grid; grid-template-columns:1.15fr .85fr; gap:50px; align-items:start; }
-    .about-text { font-size:1.08rem; color:#454955; }
-    .about-text p { margin-top:0; margin-bottom:18px; }
-    .about-aside { background:var(--lavender); padding:28px; border-radius:14px; }
-    .about-aside h3 { margin:0 0 12px; font-size:1.05rem; }
-    .tag-list { display:flex; flex-wrap:wrap; gap:8px; }
-    .tag { padding:7px 11px; background:rgba(255,255,255,.8); border:1px solid #e1d8ed; border-radius:999px; font-size:.82rem; color:#514367; }
-    .project-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
-    .project { background:white; border:1px solid var(--line); border-radius:14px; overflow:hidden; transition:.2s ease; }
-    .project:hover { transform:translateY(-3px); box-shadow:0 14px 36px rgba(35,24,54,.07); }
-    .project-art { height:220px; background:linear-gradient(135deg,#eee8f5,#e9eef4); display:flex; align-items:center; justify-content:center; padding:24px; position:relative; overflow:hidden; }
-    .project-art .art-label { position:absolute; left:18px; top:16px; font-size:.68rem; text-transform:uppercase; letter-spacing:.13em; color:#665879; font-weight:800; }
-    .project-body { padding:24px; }
-    .meta { color:var(--purple); text-transform:uppercase; letter-spacing:.12em; font-size:.7rem; font-weight:800; }
-    h3 { letter-spacing:-.025em; line-height:1.2; }
-    .project h3 { font-size:1.35rem; margin:8px 0 10px; }
-    .project p { color:var(--muted); margin:0 0 16px; }
-    .details { border-top:1px solid var(--line); padding-top:13px; margin-top:13px; }
-    .details summary { cursor:pointer; color:var(--purple); font-weight:700; font-size:.9rem; }
-    .details ul { padding-left:19px; color:#555966; margin-bottom:0; }
-    .leadership-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
-    .role { padding:22px 23px; background:white; border:1px solid var(--line); border-radius:12px; }
-    .role h3 { margin:0 0 5px; font-size:1.12rem; }
-    .role .org { color:var(--purple); font-weight:650; font-size:.9rem; }
-    .role p { margin:10px 0 0; color:var(--muted); font-size:.94rem; }
-    .interests { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-    .interest { min-height:190px; background:var(--blue); padding:24px; border-radius:12px; display:flex; flex-direction:column; justify-content:space-between; }
-    .interest:nth-child(2) { background:var(--lavender); }
-    .interest:nth-child(3) { background:#f1eee8; }
-    .interest .num { color:var(--purple); font-size:.75rem; font-weight:800; letter-spacing:.14em; }
-    .interest h3 { font-size:1.22rem; margin:28px 0 7px; }
-    .interest p { margin:0; color:#5e626d; font-size:.91rem; }
-    .reflection-box { border:1px dashed #c9bfd6; background:#fff; padding:30px; border-radius:14px; display:grid; grid-template-columns:1fr auto; gap:24px; align-items:center; }
-    .reflection-box h3 { font-size:1.35rem; margin:0 0 8px; }
-    .reflection-box p { margin:0; color:var(--muted); max-width:650px; }
-    .resume-panel { background:var(--purple-dark); color:white; border-radius:16px; padding:38px; display:flex; justify-content:space-between; align-items:center; gap:25px; }
-    .resume-panel p { color:#e5dced; margin:8px 0 0; }
-    .resume-panel .button { background:white; color:var(--purple-dark); white-space:nowrap; }
-    .contact { background:#f0edf4; padding:54px 0; border-top:0; }
-    .contact-inner { display:flex; justify-content:space-between; gap:30px; align-items:center; flex-wrap:wrap; }
-    .contact h2 { font-size:2.3rem; }
-    .contact p { color:var(--muted); margin:8px 0 0; }
-    .contact-links { display:flex; gap:18px; flex-wrap:wrap; }
-    .contact-links a { color:var(--purple); font-weight:700; text-decoration:none; }
-    footer { padding:22px 0; color:#777985; font-size:.82rem; }
-    .small-note { color:#777985; font-size:.8rem; margin-top:14px; }
-
-    .gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-    .photo-slot { min-height:190px; border:1.5px dashed #b9a9cd; border-radius:12px; background:linear-gradient(135deg,#f1edf7,#eef2f6); display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; color:#68547f; font-weight:700; cursor:default; overflow:hidden; }
-    .photo-slot img { width:100%; height:100%; min-height:190px; object-fit:cover; display:block; }
-
-    .collabs { margin-top:16px; padding-top:14px; border-top:1px solid var(--line); display:flex; gap:8px; flex-wrap:wrap; align-items:center; font-size:.84rem; }
-    .collabs:has(.collab-list:empty) { display:none; }
-    .collab-label { color:var(--purple); text-transform:uppercase; letter-spacing:.12em; font-size:.68rem; font-weight:800; margin-right:4px; }
-    .collab-list { display:contents; }
-    .chip { display:inline-flex; gap:6px; align-items:baseline; padding:5px 11px; background:var(--lavender); border:1px solid #e1d8ed; border-radius:999px; color:#514367; }
-    .chip a { color:var(--purple); font-weight:700; text-decoration:none; } .chip a:hover { text-decoration:underline; }
-    .chip b { font-weight:700; } .chip small { color:#7a6c8f; }
-    .personal-grid { display:grid; grid-template-columns:1.1fr .9fr; gap:50px; align-items:start; margin-bottom:34px; }
-    .fun-facts { margin:0; padding:0; list-style:none; } .fun-facts li { padding:10px 0; border-bottom:1px solid #e1d8ed; color:#514367; } .fun-facts li:last-child { border:0; }
-    @media (max-width:760px) { .personal-grid { grid-template-columns:1fr; gap:28px; } }
-    @media (max-width:760px) { .gallery-grid { grid-template-columns:1fr 1fr; } }
-    @media (max-width:480px) { .gallery-grid { grid-template-columns:1fr; } }
-    @media (max-width:760px) {
-      .nav-inner { min-height:65px; }
-      .menu-button { display:block; }
-      .nav-links { display:none; position:absolute; left:0; right:0; top:64px; background:var(--paper); padding:18px 22px; border-bottom:1px solid var(--line); flex-direction:column; align-items:flex-start; }
-      .nav-links.open { display:flex; }
-      .hero { padding:72px 0 65px; }
-      section { padding:62px 0; }
-      .section-head { display:block; }
-      .section-intro { margin-top:14px; }
-      .about-grid,.project-grid,.leadership-grid,.interests { grid-template-columns:1fr; }
-      .project-art { height:190px; }
-      .reflection-box { grid-template-columns:1fr; }
-      .resume-panel { display:block; padding:28px; }
-      .resume-panel .button { margin-top:20px; }
-    }
-  </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Portfolio Admin</title>
+<style>
+:root{--purple:#4e2a84;--dark:#32145f;--lav:#f0ebf7;--line:#e6e0ed;--ink:#252331}
+*{box-sizing:border-box}body{margin:0;background:#f8f6fa;color:var(--ink);font:15px/1.5 Inter,system-ui,sans-serif}
+header{background:var(--dark);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+header h1{font-size:1.1rem;margin:0}header small{color:#e6dff0}
+.layout{display:grid;grid-template-columns:330px 1fr;gap:18px;max-width:1400px;margin:18px auto;padding:0 18px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;align-self:start;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+.panel h2{font-size:.95rem;margin:18px 0 8px;color:var(--dark)}.panel h2:first-child{margin-top:0}
+.panel p{font-size:.82rem;color:#666;margin:0 0 8px}
+input,select{width:100%;padding:9px 10px;border:1px solid #d6cbe3;border-radius:8px;margin:3px 0;font:inherit;font-size:.88rem}
+.btn{display:block;width:100%;padding:10px;border-radius:8px;border:1px solid #d6cbe3;background:#fff;color:var(--dark);font-weight:700;cursor:pointer;margin:7px 0;text-align:center;font-size:.88rem}
+.btn.primary{background:var(--purple);color:#fff;border-color:var(--purple)}.btn:disabled{opacity:.4;cursor:not-allowed}
+input[type=file]{display:none}
+#status{font-size:.82rem;background:var(--lav);padding:10px;border-radius:8px;color:#514367;margin-top:12px;white-space:pre-wrap}
+#status.err{background:#fde8e8;color:#8a1c1c}#status.ok{background:#e4f5e8;color:#1d5a2c}
+.preview{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.preview iframe{width:100%;height:calc(100vh - 110px);min-height:500px;border:0}
+#login{max-width:460px;margin:40px auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px}
+#login h2{margin-top:0}#login ol{padding-left:18px;font-size:.85rem;color:#555}
+.row{display:flex;gap:8px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.panel{position:static;max-height:none}}
+</style>
 </head>
 <body>
-  <header class="nav">
-    <div class="wrap nav-inner">
-      <a class="brand" href="#home">betsyy<span>bejarano</span></a>
-      <button class="menu-button" aria-label="Open navigation" onclick="document.querySelector('.nav-links').classList.toggle('open')">Menu</button>
-      <nav class="nav-links" aria-label="Main navigation">
-        <a href="#about">Overview</a><a href="#personal">About Me</a><a href="#education">Education</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#leadership">Leadership</a>
-        <a href="#skills">Skills</a><a href="#interests">Interests</a><a href="#reflections">Reflections</a><a href="#resume">Resume</a>
-      </nav>
-    </div>
-  </header>
+<header><div><h1>Portfolio Admin</h1><small>Edit your site, then click Publish.</small></div><button class="btn" id="logout" style="width:auto;margin:0">Sign out</button></header>
 
-  <main>
-    <section class="hero" id="home" style="border-top:0">
-      <div class="wrap">
-        <div class="eyebrow">Civil Engineering · Northwestern University</div>
-        <h1>Building with purpose.<br><em>Engineering for people.</em></h1>
-        <p class="hero-copy">I'm Betsy Bejarano, a civil engineering student interested in structural design, sustainable buildings, and the spaces that bring communities together.</p>
-        <div class="hero-actions">
-          <a class="button primary" href="#projects">Explore my work</a>
-          <a class="button secondary" href="#about">Get to know me</a>
-        </div>
-        <div class="hero-note">
-          <span>Northwestern University · Evanston, Illinois</span>
-          <span>B.S. Civil Engineering · Expected June 2028</span>
-          <span>English & Spanish</span>
-        </div>
-      </div>
-    </section>
+<div id="login" hidden>
+  <h2>Connect to your site</h2>
+  <p style="font-size:.85rem;color:#555">Your site's files live in a GitHub repository. This page edits them using a personal access token that only you have. It is saved in this browser only.</p>
+  <label>Repository (owner/name)<input id="repo" placeholder="betsyybejarano/portfolio"></label>
+  <label>Branch<input id="branch" value="main"></label>
+  <label>Access token<input id="token" type="password" placeholder="github_pat_..."></label>
+  <button class="btn primary" id="connect">Connect</button>
+  <div id="loginErr" style="color:#8a1c1c;font-size:.85rem"></div>
+  <p style="margin-top:14px"><b>Get a token:</b> GitHub → Settings → Developer settings → Fine-grained tokens → Generate. Choose <i>only this repository</i> and set <b>Contents: Read and write</b>. See README.md.</p>
+</div>
 
-    <section id="about">
-      <div class="wrap">
-        <div class="section-head">
-          <div><div class="section-kicker">A little about me</div><h2>Engineering is about<br>people, too.</h2></div>
-          <p class="section-intro">My interests sit at the intersection of the built environment, sustainability, thoughtful design, and community impact.</p>
-        </div>
-        <div class="about-grid">
-          <div class="about-text">
-            <p>I'm a proud first-generation Mexican American student at Northwestern University pursuing a Bachelor of Science in Civil Engineering, with an interest in structural engineering and project management.</p>
-            <p>I'm drawn to the process of turning an idea into a finished project: bringing people together, working through design challenges, and considering the details that make a space useful and welcoming. I believe engineering should serve both our planet and the people who depend on it.</p>
-            <p>Through coursework, student organizations, and hands-on projects, I'm continuing to build my technical skills while learning how collaboration, communication, and thoughtful planning shape successful work.</p>
-          </div>
-          <aside class="about-aside">
-            <h3>Areas I'm exploring</h3>
-            <div class="tag-list">
-              <span class="tag">Structural engineering</span><span class="tag">Project management</span>
-              <span class="tag">Sustainable design</span><span class="tag">Building performance</span>
-              <span class="tag">Community-centered spaces</span><span class="tag">Engineering design</span>
-            </div>
-            <p class="small-note">This portfolio will grow as I gain experience and explore new areas of civil engineering.</p>
-          </aside>
-        </div>
-      </div>
-    </section>
+<div class="layout" id="app" hidden>
+<aside class="panel">
+  <h2>Edit text</h2>
+  <p>Click any heading, paragraph, or tag in the preview and type. Click a photo box or photo to replace it.</p>
+  <h2>Resume</h2>
+  <p>Upload a new PDF. It replaces the old one right away; the site link stays the same.</p>
+  <label class="btn" for="resumeFile">Upload new resume (PDF)</label><input id="resumeFile" type="file" accept="application/pdf">
+  <h2>Project collaborators</h2>
+  <select id="projSel"></select>
+  <input id="cName" placeholder="Collaborator name"><input id="cRole" placeholder="Role (optional)"><input id="cLink" placeholder="LinkedIn / website (optional)">
+  <button class="btn" id="addCollab">Add collaborator</button>
+  <p>To remove one, click their name in the preview.</p>
+  <h2>Projects</h2>
+  <button class="btn" id="dupProj">Duplicate selected project</button>
+  <h2>Contact links</h2>
+  <input id="sEmail" placeholder="Email address"><input id="sLinked" placeholder="LinkedIn profile URL">
+  <button class="btn" id="applyLinks">Apply links</button>
+  <h2>Publish</h2>
+  <button class="btn primary" id="publish">Publish changes</button>
+  <button class="btn" id="reload">Discard &amp; reload</button>
+  <div id="status">Loading…</div>
+</aside>
+<section class="preview"><iframe id="frame" title="Site preview"></iframe></section>
+</div>
 
-    <section id="personal">
-      <div class="wrap">
-        <div class="section-head">
-          <div><div class="section-kicker">About me</div><h2>Outside the lab<br>& classroom.</h2></div>
-          <p class="section-intro">The hobbies, interests, and little things that make me, me.</p>
-        </div>
-        <div class="personal-grid">
-          <div class="about-text"><p>Write a short, personal intro here: where you're from, what you do for fun, what a perfect weekend looks like. Click this text in the admin editor and type over it.</p></div>
-          <aside class="about-aside"><h3>Quick facts</h3><ul class="fun-facts"><li>Favorite thing to do on campus: add yours</li><li>Currently into: add yours</li><li>Go-to music / show / book: add yours</li></ul></aside>
-        </div>
-        <div class="interests">
-          <article class="interest"><span class="num">01 / HOBBY</span><div><h3>Add your first hobby</h3><p>A sentence about why you love it.</p></div></article>
-          <article class="interest"><span class="num">02 / HOBBY</span><div><h3>Add your second hobby</h3><p>A sentence about why you love it.</p></div></article>
-          <article class="interest"><span class="num">03 / HOBBY</span><div><h3>Add your third hobby</h3><p>A sentence about why you love it.</p></div></article>
-        </div>
-        <div class="gallery-grid" style="margin-top:14px">
-          <div class="photo-slot" data-photo-slot><span>＋ Add a personal photo</span></div>
-          <div class="photo-slot" data-photo-slot><span>＋ Add a personal photo</span></div>
-          <div class="photo-slot" data-photo-slot><span>＋ Add a personal photo</span></div>
-        </div>
-      </div>
-    </section>
+<script>
+const $=id=>document.getElementById(id);
+let cfg=JSON.parse(localStorage.getItem('portfolioAdmin')||'null'),frame=$('frame'),pending=null;
+const say=(t,c='')=>{$('status').textContent=t;$('status').className=c};
 
-    <section id="education">
-      <div class="wrap">
-        <div class="section-head"><div><div class="section-kicker">Academic foundation</div><h2>Education</h2></div><p class="section-intro">Building a foundation in engineering analysis, design, and the systems that shape our built environment.</p></div>
-        <div class="role"><h3>Northwestern University</h3><div class="org">Evanston, Illinois · Bachelor of Science in Civil Engineering · Expected June 2028</div><p><strong>Relevant coursework:</strong> Design Thinking and Communication I & II, Multivariable Calculus, Linear Algebra, Statics, System Dynamics, Mechanics of Materials, and Differential Equations and Modeling (in progress).</p></div>
-      </div>
-    </section>
+/* ---------- GitHub helpers ---------- */
+async function gh(path,opt={}){
+  const r=await fetch(`https://api.github.com/repos/${cfg.repo}/contents/${path}${opt.get?'?ref='+cfg.branch:''}`,
+    {method:opt.method||'GET',headers:{Authorization:'Bearer '+cfg.token,Accept:opt.raw?'application/vnd.github.raw':'application/vnd.github+json'},body:opt.body});
+  if(!r.ok){const e=new Error((await r.json().catch(()=>({}))).message||('HTTP '+r.status));e.status=r.status;throw e}
+  return opt.raw?r.blob():r.json();
+}
+const b64Text=t=>{const b=new TextEncoder().encode(t);let s='';for(let i=0;i<b.length;i+=8192)s+=String.fromCharCode(...b.subarray(i,i+8192));return btoa(s)};
+const fromB64=c=>new TextDecoder().decode(Uint8Array.from(atob(c.replace(/\n/g,'')),x=>x.charCodeAt(0)));
+async function put(path,b64,msg){
+  let sha;try{sha=(await gh(path,{get:1})).sha}catch(e){if(e.status!==404)throw e}
+  return gh(path,{method:'PUT',body:JSON.stringify({message:msg,content:b64,branch:cfg.branch,...(sha?{sha}:{})})});
+}
 
-    <section id="projects">
-      <div class="wrap">
-        <div class="section-head">
-          <div><div class="section-kicker">Selected work</div><h2>Projects & applied work</h2></div>
-          <p class="section-intro">A look at projects where I've explored design, prototyping, structural concepts, and collaboration.</p>
-        </div>
-        <div class="project-grid">
-          <article class="project">
-            <div class="project-art">
-              <span class="art-label">Structural design · 2026–present</span>
-              <svg viewBox="0 0 520 190" width="100%" height="100%" role="img" aria-label="Stylized steel truss bridge illustration">
-                <g fill="none" stroke="#4e2a84" stroke-width="5" stroke-linejoin="round">
-                  <path d="M35 145 L485 145 M55 145 L55 48 L465 48 L465 145"/>
-                  <path d="M55 48 L105 145 L155 48 L205 145 L255 48 L305 145 L355 48 L405 145 L465 48"/>
-                  <path d="M55 48 L155 48 L255 48 L355 48 L465 48"/>
-                </g>
-                <g fill="#9a83b8"><circle cx="55" cy="145" r="7"/><circle cx="155" cy="145" r="7"/><circle cx="255" cy="145" r="7"/><circle cx="355" cy="145" r="7"/><circle cx="465" cy="145" r="7"/></g>
-              </svg>
-            </div>
-            <div class="project-body">
-              <div class="meta">ASCE · Northwestern University · October 2026–present</div>
-              <h3>Bridge Design Projects</h3>
-              <p>Collaborating with a 15-member team on a steel bridge for the 2027 ASCE Student Steel Bridge Competition, while also developing a 3D-printed PLA bridge for the 2027 3D Printing Competition.</p>
-              <div class="details"><details><summary>Project details</summary><ul>
-                <li>Steel bridge design target: approximately 22–23 ft, with constraints on member size, clearances, and bolted connections.</li>
-                <li>3D-printed bridge design target: 24 in clear span, considering strength-to-weight ratio, stiffness, and assembly time.</li>
-              </ul></details></div>
-              <div class="collabs"><span class="collab-label">Collaborators</span><span class="collab-list" data-collabs></span></div>
-            </div>
-          </article>
+/* ---------- login ---------- */
+function showLogin(){$('login').hidden=false;$('app').hidden=true;if(cfg){$('repo').value=cfg.repo;$('branch').value=cfg.branch}}
+$('connect').onclick=async()=>{
+  cfg={repo:$('repo').value.trim(),branch:$('branch').value.trim()||'main',token:$('token').value.trim()};
+  try{await gh('index.html',{get:1});localStorage.setItem('portfolioAdmin',JSON.stringify(cfg));start()}
+  catch(e){$('loginErr').textContent='Could not connect: '+e.message+'. Check the repo name, branch, and token permissions.'}
+};
+$('logout').onclick=()=>{localStorage.removeItem('portfolioAdmin');cfg=null;showLogin()};
 
-          <article class="project">
-            <div class="project-art">
-              <span class="art-label">Accessible design · 2025</span>
-              <svg viewBox="0 0 520 190" width="100%" height="100%" role="img" aria-label="Stylized adjustable coat hook prototype">
-                <g fill="#8a70a8" stroke="#4e2a84" stroke-width="3">
-                  <rect x="115" y="28" width="58" height="135" rx="5"/><rect x="231" y="28" width="58" height="135" rx="5"/><rect x="347" y="28" width="58" height="135" rx="5"/>
-                </g>
-                <g fill="#eee9f4" stroke="#4e2a84" stroke-width="2">
-                  <circle cx="144" cy="65" r="8"/><circle cx="144" cy="112" r="8"/>
-                  <circle cx="260" cy="65" r="8"/><circle cx="260" cy="112" r="8"/>
-                  <circle cx="376" cy="65" r="8"/><circle cx="376" cy="112" r="8"/>
-                </g>
-                <path d="M144 112 Q144 145 170 145 M260 112 Q260 145 286 145 M376 112 Q376 145 402 145" fill="none" stroke="#4e2a84" stroke-width="5"/>
-              </svg>
-            </div>
-            <div class="project-body">
-              <div class="meta">Design thinking & communication · April–June 2025</div>
-              <h3>Adaptive & Retractable Coat Hook</h3>
-              <p>Developed an adjustable, retractable coat hook concept in response to the physical needs of a student with limited wrist pronation, digital contractures, and impaired fine motor skills.</p>
-              <div class="details"><details><summary>Project details</summary><ul>
-                <li>Created a prototype with a retractable, height-adjustable hook and key-lock system.</li>
-                <li>Worked with an educator and specialist at the Julia S. Molloy Education Center to define user requirements and evaluate the prototype.</li>
-              </ul></details></div>
-              <div class="collabs"><span class="collab-label">Collaborators</span><span class="collab-list" data-collabs></span></div>
-            </div>
-          </article>
+/* ---------- load site ---------- */
+async function start(){
+  $('login').hidden=true;$('app').hidden=false;say('Loading your site…');
+  try{
+    const f=await gh('index.html',{get:1});
+    frame.onload=prepare;frame.srcdoc=fromB64(f.content);
+  }catch(e){say('Could not load site: '+e.message,'err')}
+}
+async function prepare(){
+  const d=frame.contentDocument;
+  const st=d.createElement('style');st.id='adminstyle';
+  st.textContent='[data-photo-slot],img{cursor:pointer}h1:hover,h2:hover,h3:hover,p:hover,li:hover,.tag:hover,.meta:hover,.org:hover{outline:1px dashed #b9a9cd}.chip{cursor:pointer}';
+  d.head.appendChild(st);
+  d.addEventListener('click',onClick,true);
+  d.addEventListener('focusout',e=>{const t=e.target;if(t.contentEditable==='true'){t.contentEditable='false';t.style.outline='';say('Edited. Click Publish when you are ready.')}});
+  refreshProjects();
+  const a=d.getElementById('emailLink'),l=d.getElementById('linkedinLink');
+  $('sEmail').value=(a?.getAttribute('href')||'').replace('mailto:','');$('sLinked').value=l?.getAttribute('href')||'';
+  // previews for already-published photos
+  for(const img of d.querySelectorAll('img[src^="assets/"]')){
+    const p=img.getAttribute('src');img.dataset.path=p;
+    try{img.src=URL.createObjectURL(await gh(p,{get:1,raw:1}))}catch(e){}
+  }
+  say('Ready. Click text to edit it.');
+}
+function refreshProjects(){
+  const ps=[...frame.contentDocument.querySelectorAll('.project')];
+  $('projSel').innerHTML=ps.map((p,i)=>`<option value="${i}">${p.querySelector('h3')?.textContent||'Project '+(i+1)}</option>`).join('');
+}
+function onClick(e){
+  const d=frame.contentDocument,t=e.target;
+  if(t.closest('.chip')){e.preventDefault();e.stopPropagation();if(confirm('Remove this collaborator?'))t.closest('.chip').remove();return}
+  const photo=t.closest('[data-photo-slot],img');
+  if(photo){e.preventDefault();e.stopPropagation();pending=photo;$('photoFile').click();return}
+  const el=t.closest('h1,h2,h3,p,li,summary,.eyebrow,.section-kicker,.meta,.org,.tag,.art-label,.hero-note span,.num,.collab-label');
+  if(!el||el.closest('nav,button,footer,svg,.chip')){if(t.closest('a'))e.preventDefault();return}
+  e.preventDefault();e.stopPropagation();
+  d.querySelectorAll('[contenteditable="true"]').forEach(x=>{x.contentEditable='false';x.style.outline=''});
+  el.contentEditable='true';el.style.outline='2px dashed #8a70a8';el.focus();say('Editing text…');
+}
 
-          <article class="project">
-            <div class="project-art">
-              <span class="art-label">Product development · 2024–2025</span>
-              <svg viewBox="0 0 520 190" width="100%" height="100%" role="img" aria-label="Stylized oxygen regulator prototype">
-                <g fill="#58714b" stroke="#31452d" stroke-width="4">
-                  <path d="M90 42 H210 V82 H178 V122 H122 V82 H90 Z"/>
-                  <path d="M310 42 H430 V82 H398 V122 H342 V82 H310 Z"/>
-                </g>
-                <g fill="#d6d8d3" stroke="#555b56" stroke-width="4">
-                  <rect x="195" y="88" width="130" height="28" rx="14"/><rect x="55" y="115" width="90" height="34" rx="8"/><rect x="375" y="115" width="90" height="34" rx="8"/>
-                </g>
-                <path d="M145 132 H195 M325 102 H375" stroke="#555b56" stroke-width="13" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <div class="project-body">
-              <div class="meta">Class project · September 2024–March 2025</div>
-              <h3>Rapid-Deployment Oxygen Regulator</h3>
-              <p>Worked with a team on a spring-loaded oxygen tank regulator concept for a project partner at Ann & Robert H. Lurie Children's Hospital of Chicago.</p>
-              <div class="details"><details><summary>Project details</summary><ul>
-                <li>The project aimed to reduce setup time; the team reported a reduction from 30 seconds to 4.5 seconds.</li>
-                <li>Contributed to team coordination, project planning, budget awareness, and communication with the project partner.</li><li>Selected for a quarter-long student entrepreneur residency focused on prototype development and venture exploration.</li>
-                <li>The prototype was developed as a class project; this portfolio does not imply hospital employment or product deployment.</li>
-              </ul></details></div>
-              <div class="collabs"><span class="collab-label">Collaborators</span><span class="collab-list" data-collabs></span></div>
-            </div>
-          </article>
+/* ---------- photos ---------- */
+const pf=document.createElement('input');pf.type='file';pf.accept='image/*';pf.id='photoFile';pf.hidden=true;document.body.appendChild(pf);
+pf.onchange=async()=>{
+  const f=pf.files[0];if(!f||!pending)return;
+  const url=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(f)});
+  const im=await new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.src=url});
+  const k=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement('canvas');
+  c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+  const data=c.toDataURL('image/jpeg',.85),d=frame.contentDocument;
+  if(pending.matches('[data-photo-slot]')){
+    const i=d.createElement('img');i.src=data;i.alt=f.name.replace(/\.[^.]+$/,'');
+    pending.replaceChildren(i);pending.style.cssText='padding:0;border:0';
+  }else{pending.src=data;pending.removeAttribute('data-path')}
+  pending=null;pf.value='';say('Photo added. Click Publish to save it.');
+};
 
-          <article class="project">
-            <div class="project-art">
-              <span class="art-label">Community engagement · Summer 2026</span>
-              <svg viewBox="0 0 520 190" width="100%" height="100%" role="img" aria-label="Stylized community garden illustration">
-                <path d="M35 145 H485" stroke="#9a8d79" stroke-width="7" stroke-linecap="round"/>
-                <g fill="#9a7654"><rect x="70" y="95" width="115" height="48" rx="5"/><rect x="215" y="95" width="115" height="48" rx="5"/><rect x="360" y="95" width="95" height="48" rx="5"/></g>
-                <g fill="#64865d"><path d="M125 95 Q95 55 125 35 Q155 55 125 95 M270 95 Q240 55 270 35 Q300 55 270 95 M405 95 Q380 58 405 40 Q430 58 405 95"/></g>
-                <g stroke="#64865d" stroke-width="5"><path d="M125 95 V45 M270 95 V45 M405 95 V50"/></g>
-              </svg>
-            </div>
-            <div class="project-body">
-              <div class="meta">Maxwell Street Community Garden · Summer 2026</div>
-              <h3>Community Engagement & Development</h3>
-              <p>Supported a community garden through grant research, outreach materials, events, and collaboration with local organizations.</p>
-              <div class="details"><details><summary>Project details</summary><ul>
-                <li>Researched 50+ grant opportunities and potential funding sources.</li>
-                <li>Developed social media content, event flyers, and newsletters.</li>
-                <li>Supported community events and nonprofit initiatives.</li>
-              </ul></details></div>
-              <div class="collabs"><span class="collab-label">Collaborators</span><span class="collab-list" data-collabs></span></div>
-            </div>
-          </article>
-        </div>
-        <div class="section-head" style="margin-top:54px"><div><div class="section-kicker">In the process</div><h2>Project gallery</h2></div><p class="section-intro">A visual collection of sketches, CAD work, prototypes, team collaboration, and finished project moments.</p></div>
-        <div class="gallery-grid">
-          <div class="photo-slot" data-photo-slot><span>＋ Add steel bridge design photo</span></div>
-          <div class="photo-slot" data-photo-slot><span>＋ Add 3D-printed bridge photo</span></div>
-          <div class="photo-slot" data-photo-slot><span>＋ Add oxygen regulator prototype photo</span></div>
-          <div class="photo-slot" data-photo-slot><span>＋ Add coat hook CAD / prototype photo</span></div>
-          <div class="photo-slot" data-photo-slot><span>＋ Add collaboration photo</span></div>
-          <div class="photo-slot" data-photo-slot><span>＋ Add community / leadership photo</span></div>
-        </div>
-      </div>
-    </section>
+/* ---------- collaborators / projects / links ---------- */
+$('addCollab').onclick=()=>{
+  const d=frame.contentDocument,p=d.querySelectorAll('.project')[$('projSel').value],name=$('cName').value.trim();
+  if(!p||!name)return say('Enter a collaborator name first.','err');
+  const link=$('cLink').value.trim(),role=$('cRole').value.trim(),chip=d.createElement('span');chip.className='chip';
+  const n=link?d.createElement('a'):d.createElement('b');n.textContent=name;
+  if(link){n.href=/^https?:\/\//.test(link)?link:'https://'+link;n.target='_blank';n.rel='noopener'}
+  chip.appendChild(n);
+  if(role){const s=d.createElement('small');s.textContent=role;chip.appendChild(s)}
+  p.querySelector('[data-collabs]').appendChild(chip);
+  ['cName','cRole','cLink'].forEach(i=>$(i).value='');say(`Added ${name}. Click Publish to save.`);
+};
+$('dupProj').onclick=()=>{
+  const p=frame.contentDocument.querySelectorAll('.project')[$('projSel').value];if(!p)return;
+  const c=p.cloneNode(true);c.querySelector('[data-collabs]').innerHTML='';p.after(c);refreshProjects();
+  say('Project duplicated below the original. Edit its text, then Publish.');
+};
+$('applyLinks').onclick=()=>{
+  const d=frame.contentDocument,e=$('sEmail').value.trim(),l=$('sLinked').value.trim();
+  if(e)d.getElementById('emailLink').href='mailto:'+e;if(l)d.getElementById('linkedinLink').href=l;
+  say('Links updated. Click Publish to save.');
+};
 
+/* ---------- resume ---------- */
+$('resumeFile').onchange=async()=>{
+  const f=$('resumeFile').files[0];if(!f)return;
+  if(f.size>8e6)return say('PDF is over 8 MB. Please compress it.','err');
+  say('Uploading resume…');
+  try{
+    const b=new Uint8Array(await f.arrayBuffer());let s='';for(let i=0;i<b.length;i+=8192)s+=String.fromCharCode(...b.subarray(i,i+8192));
+    await put('assets/Betsy_Bejarano_Resume_Public.pdf',btoa(s),'Update resume');
+    say('Resume updated. It goes live in about a minute.','ok');
+  }catch(e){say('Resume upload failed: '+e.message,'err')}
+  $('resumeFile').value='';
+};
 
-    <section id="experience">
-      <div class="wrap">
-        <div class="section-head">
-          <div><div class="section-kicker">Professional experience</div><h2>Work & communication</h2></div>
-          <p class="section-intro">Experiences that have strengthened my communication, organization, and ability to support people in different settings.</p>
-        </div>
-        <div class="leadership-grid">
-          <article class="role"><h3>Customer Service Representative</h3><div class="org">Northwestern University · Henry Crown Sports Pavilion & Blomquist Gymnasium · September 2026–present</div><p>Assist 25+ patrons per shift in a high-traffic athletic facility, respond to questions and issues, and consistently enforce facility safety policies.</p></article>
-          <article class="role"><h3>Spanish Tutor</h3><div class="org">January 2025–present</div><p>Guide 60+ students through Spanish grammar and conjugation, develop personalized learning materials, and facilitate conversation practice.</p></article>
-        </div>
-      </div>
-    </section>
+/* ---------- publish ---------- */
+$('publish').onclick=async()=>{
+  const clone=frame.contentDocument.documentElement.cloneNode(true);
+  clone.querySelector('#adminstyle')?.remove();
+  clone.querySelectorAll('[contenteditable]').forEach(x=>x.removeAttribute('contenteditable'));
+  clone.querySelectorAll('[style]').forEach(x=>{x.style.outline='';if(!x.getAttribute('style').trim())x.removeAttribute('style')});
+  clone.querySelectorAll('img[data-path]').forEach(i=>{i.setAttribute('src',i.dataset.path);i.removeAttribute('data-path')});
+  try{
+    let n=0;
+    for(const img of clone.querySelectorAll('img[src^="data:"]')){
+      const path=`assets/photos/photo-${Date.now()}-${n++}.jpg`;
+      say(`Uploading photo ${n}…`);
+      await put(path,img.getAttribute('src').split(',')[1],'Add photo');
+      img.setAttribute('src',path);
+    }
+    say('Publishing page…');
+    await put('index.html',b64Text('<!DOCTYPE html>\n'+clone.outerHTML),'Update portfolio from admin');
+    say('Published. Your site will update in about a minute.','ok');
+  }catch(e){say('Publish failed: '+e.message,'err')}
+};
+$('reload').onclick=()=>{if(confirm('Discard unpublished changes?'))start()};
 
-    <section id="leadership">
-      <div class="wrap">
-        <div class="section-head">
-          <div><div class="section-kicker">Beyond the classroom</div><h2>Leadership & involvement</h2></div>
-          <p class="section-intro">I value creating welcoming spaces, supporting other students, and helping teams turn ideas into action.</p>
-        </div>
-        <div class="leadership-grid">
-          <article class="role"><h3>SHPEtina Director</h3><div class="org">Society of Hispanic Professional Engineers · Region 6</div><p>Lead committee initiatives that build community for women within SHPE, facilitate meetings, delegate responsibilities, and coordinate event logistics.</p></article>
-          <article class="role"><h3>Social Chair</h3><div class="org">Association of Latino Professionals for America</div><p>Plan inclusive social events and activities that strengthen Latino community connections across academic majors while working within assigned budgets.</p></article>
-          <article class="role"><h3>Mentor</h3><div class="org">Society of Women Engineers</div><p>Support a first-year engineering student with course recommendations, campus resources, and navigating the transition to a rigorous engineering program.</p></article>
-          <article class="role"><h3>Co-PR Chair</h3><div class="org">Engineers for a Sustainable World</div><p>Co-led public relations and social media initiatives; developed outreach strategies that doubled engagement during the organization's active period.</p></article>
-          <article class="role"><h3>Bridge Design Team Member</h3><div class="org">American Society of Civil Engineers · Northwestern</div><p>Contribute to student bridge design projects for the 2027 steel bridge and 3D printing competitions.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section id="skills">
-      <div class="wrap">
-        <div class="section-head"><div><div class="section-kicker">Tools & communication</div><h2>Technical skills</h2></div><p class="section-intro">Software and communication skills I continue to develop through coursework, projects, and collaboration.</p></div>
-        <div class="about-grid">
-          <div class="about-aside"><h3>Software</h3><div class="tag-list"><span class="tag">AutoCAD</span><span class="tag">MATLAB</span><span class="tag">Python</span><span class="tag">Microsoft 365</span><span class="tag">Google Workspace</span></div></div>
-          <div class="about-aside"><h3>Languages</h3><div class="tag-list"><span class="tag">Spanish · Native</span><span class="tag">English · Native</span></div><p class="small-note">This list can be updated as I gain experience with additional engineering tools.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="interests">
-      <div class="wrap">
-        <div class="section-head">
-          <div><div class="section-kicker">What inspires me</div><h2>Interests & direction</h2></div>
-          <p class="section-intro">The questions and ideas that shape the kind of engineer I hope to become.</p>
-        </div>
-        <div class="interests">
-          <article class="interest"><span class="num">01 / THE BUILT ENVIRONMENT</span><div><h3>Structures & architecture</h3><p>How thoughtful structural design supports safe, useful, and inspiring places.</p></div></article>
-          <article class="interest"><span class="num">02 / SUSTAINABILITY</span><div><h3>Building for the future</h3><p>Energy-efficient buildings, resilient communities, and responsible use of resources.</p></div></article>
-          <article class="interest"><span class="num">03 / PEOPLE & PLACE</span><div><h3>Community-centered design</h3><p>Public spaces and infrastructure that bring people together and improve quality of life.</p></div></article>
-        </div>
-      </div>
-    </section>
-
-    <section id="reflections">
-      <div class="wrap">
-        <div class="section-head">
-          <div><div class="section-kicker">Notes along the way</div><h2>Engineering reflections</h2></div>
-          <p class="section-intro">A space for lessons learned, project updates, and ideas I'm exploring as a civil engineering student.</p>
-        </div>
-        <div class="reflection-box">
-          <div><h3>Coming soon: field notes & project reflections</h3><p>Future posts could cover lessons from the ASCE bridge competitions, what I'm learning in structural engineering courses, internship experiences, and perspectives on sustainable design.</p></div>
-          <span class="tag">In progress</span>
-        </div>
-      </div>
-    </section>
-
-    <section id="resume">
-      <div class="wrap">
-        <div class="resume-panel">
-          <div><div class="section-kicker" style="color:#d7c5ee">Experience at a glance</div><h2>Want the concise version?</h2><p>Download my resume for my education, experience, technical skills, and campus involvement.</p></div>
-          <a class="button" href="assets/Betsy_Bejarano_Resume_Public.pdf" target="_blank" rel="noopener">View resume ↗</a>
-        </div>
-        
-      </div>
-    </section>
-
-    <section class="contact" id="contact">
-      <div class="wrap contact-inner">
-        <div><div class="section-kicker">Get in touch</div><h2>Let's connect.</h2><p>I'm always glad to meet people, learn from others, and explore opportunities to make a positive impact through engineering.</p></div>
-        <div class="contact-links">
-          <a id="emailLink" href="mailto:betsybejarano2028@u.northwestern.edu">Email me ↗</a>
-          <a id="linkedinLink" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn ↗</a>
-        </div>
-      </div>
-    </section>
-  </main>
-  <footer><div class="wrap">© <span id="year"></span> Betsy Bejarano · Civil Engineering Portfolio</div></footer>
-  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+cfg?start():showLogin();
+</script>
 </body>
 </html>
