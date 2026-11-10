@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Portfolio Admin</title>
+<style>
+:root{--purple:#4e2a84;--dark:#32145f;--lav:#f0ebf7;--line:#e6e0ed;--ink:#252331}
+*{box-sizing:border-box}body{margin:0;background:#f8f6fa;color:var(--ink);font:15px/1.5 Inter,system-ui,sans-serif}
+header{background:var(--dark);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+header h1{font-size:1.1rem;margin:0}header small{color:#e6dff0}
+.layout{display:grid;grid-template-columns:330px 1fr;gap:18px;max-width:1400px;margin:18px auto;padding:0 18px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;align-self:start;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+.panel h2{font-size:.95rem;margin:18px 0 8px;color:var(--dark)}.panel h2:first-child{margin-top:0}
+.panel p{font-size:.82rem;color:#666;margin:0 0 8px}
+input,select{width:100%;padding:9px 10px;border:1px solid #d6cbe3;border-radius:8px;margin:3px 0;font:inherit;font-size:.88rem}
+.btn{display:block;width:100%;padding:10px;border-radius:8px;border:1px solid #d6cbe3;background:#fff;color:var(--dark);font-weight:700;cursor:pointer;margin:7px 0;text-align:center;font-size:.88rem}
+.btn.primary{background:var(--purple);color:#fff;border-color:var(--purple)}.btn:disabled{opacity:.4;cursor:not-allowed}
+input[type=file]{display:none}
+#status{font-size:.82rem;background:var(--lav);padding:10px;border-radius:8px;color:#514367;margin-top:12px;white-space:pre-wrap}
+#status.err{background:#fde8e8;color:#8a1c1c}#status.ok{background:#e4f5e8;color:#1d5a2c}
+.preview{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.preview iframe{width:100%;height:calc(100vh - 110px);min-height:500px;border:0}
+#login{max-width:460px;margin:40px auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px}
+#login h2{margin-top:0}#login ol{padding-left:18px;font-size:.85rem;color:#555}
+.row{display:flex;gap:8px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.panel{position:static;max-height:none}}
+</style>
+</head>
+<body>
+<header><div><h1>Portfolio Admin</h1><small>Edit your site, then click Publish.</small></div><button class="btn" id="logout" style="width:auto;margin:0">Sign out</button></header>
+
+<div id="login" hidden>
+  <h2>Connect to your site</h2>
+  <p style="font-size:.85rem;color:#555">Your site's files live in a GitHub repository. This page edits them using a personal access token that only you have. It is saved in this browser only.</p>
+  <label>Repository (owner/name)<input id="repo" placeholder="betsyybejarano/portfolio"></label>
+  <label>Branch<input id="branch" value="main"></label>
+  <label>Access token<input id="token" type="password" placeholder="github_pat_..."></label>
+  <button class="btn primary" id="connect">Connect</button>
+  <div id="loginErr" style="color:#8a1c1c;font-size:.85rem"></div>
+  <p style="margin-top:14px"><b>Get a token:</b> GitHub → Settings → Developer settings → Fine-grained tokens → Generate. Choose <i>only this repository</i> and set <b>Contents: Read and write</b>. See README.md.</p>
+</div>
+
+<div class="layout" id="app" hidden>
+<aside class="panel">
+  <h2>Edit text</h2>
+  <p>Click any heading, paragraph, or tag in the preview and type. Click a photo box or photo to replace it.</p>
+  <h2>Resume</h2>
+  <p>Upload a new PDF. It replaces the old one right away; the site link stays the same.</p>
+  <label class="btn" for="resumeFile">Upload new resume (PDF)</label><input id="resumeFile" type="file" accept="application/pdf">
+  <h2>Project collaborators</h2>
+  <select id="projSel"></select>
+  <input id="cName" placeholder="Collaborator name"><input id="cRole" placeholder="Role (optional)"><input id="cLink" placeholder="LinkedIn / website (optional)">
+  <button class="btn" id="addCollab">Add collaborator</button>
+  <p>To remove one, click their name in the preview.</p>
+  <h2>Projects</h2>
+  <button class="btn" id="dupProj">Duplicate selected project</button>
+  <h2>Contact links</h2>
+  <input id="sEmail" placeholder="Email address"><input id="sLinked" placeholder="LinkedIn profile URL">
+  <button class="btn" id="applyLinks">Apply links</button>
+  <h2>Publish</h2>
+  <button class="btn primary" id="publish">Publish changes</button>
+  <button class="btn" id="reload">Discard &amp; reload</button>
+  <div id="status">Loading…</div>
+</aside>
+<section class="preview"><iframe id="frame" title="Site preview"></iframe></section>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let cfg=JSON.parse(localStorage.getItem('portfolioAdmin')||'null'),frame=$('frame'),pending=null;
+const say=(t,c='')=>{$('status').textContent=t;$('status').className=c};
+
+/* ---------- GitHub helpers ---------- */
+async function gh(path,opt={}){
+  const r=await fetch(`https://api.github.com/repos/${cfg.repo}/contents/${path}${opt.get?'?ref='+cfg.branch:''}`,
+    {method:opt.method||'GET',headers:{Authorization:'Bearer '+cfg.token,Accept:opt.raw?'application/vnd.github.raw':'application/vnd.github+json'},body:opt.body});
+  if(!r.ok){const e=new Error((await r.json().catch(()=>({}))).message||('HTTP '+r.status));e.status=r.status;throw e}
+  return opt.raw?r.blob():r.json();
+}
+const b64Text=t=>{const b=new TextEncoder().encode(t);let s='';for(let i=0;i<b.length;i+=8192)s+=String.fromCharCode(...b.subarray(i,i+8192));return btoa(s)};
+const fromB64=c=>new TextDecoder().decode(Uint8Array.from(atob(c.replace(/\n/g,'')),x=>x.charCodeAt(0)));
+async function put(path,b64,msg){
+  let sha;try{sha=(await gh(path,{get:1})).sha}catch(e){if(e.status!==404)throw e}
+  return gh(path,{method:'PUT',body:JSON.stringify({message:msg,content:b64,branch:cfg.branch,...(sha?{sha}:{})})});
+}
+
+/* ---------- login ---------- */
+function showLogin(){$('login').hidden=false;$('app').hidden=true;if(cfg){$('repo').value=cfg.repo;$('branch').value=cfg.branch}}
+$('connect').onclick=async()=>{
+  cfg={repo:$('repo').value.trim(),branch:$('branch').value.trim()||'main',token:$('token').value.trim()};
+  try{await gh('index.html',{get:1});localStorage.setItem('portfolioAdmin',JSON.stringify(cfg));start()}
+  catch(e){$('loginErr').textContent='Could not connect: '+e.message+'. Check the repo name, branch, and token permissions.'}
+};
+$('logout').onclick=()=>{localStorage.removeItem('portfolioAdmin');cfg=null;showLogin()};
+
+/* ---------- load site ---------- */
+async function start(){
+  $('login').hidden=true;$('app').hidden=false;say('Loading your site…');
+  try{
+    const f=await gh('index.html',{get:1});
+    frame.onload=prepare;frame.srcdoc=fromB64(f.content);
+  }catch(e){say('Could not load site: '+e.message,'err')}
+}
+async function prepare(){
+  const d=frame.contentDocument;
+  const st=d.createElement('style');st.id='adminstyle';
+  st.textContent='[data-photo-slot],img{cursor:pointer}h1:hover,h2:hover,h3:hover,p:hover,li:hover,.tag:hover,.meta:hover,.org:hover{outline:1px dashed #b9a9cd}.chip{cursor:pointer}';
+  d.head.appendChild(st);
+  d.addEventListener('click',onClick,true);
+  d.addEventListener('focusout',e=>{const t=e.target;if(t.contentEditable==='true'){t.contentEditable='false';t.style.outline='';say('Edited. Click Publish when you are ready.')}});
+  refreshProjects();
+  const a=d.getElementById('emailLink'),l=d.getElementById('linkedinLink');
+  $('sEmail').value=(a?.getAttribute('href')||'').replace('mailto:','');$('sLinked').value=l?.getAttribute('href')||'';
+  // previews for already-published photos
+  for(const img of d.querySelectorAll('img[src^="assets/"]')){
+    const p=img.getAttribute('src');img.dataset.path=p;
+    try{img.src=URL.createObjectURL(await gh(p,{get:1,raw:1}))}catch(e){}
+  }
+  say('Ready. Click text to edit it.');
+}
+function refreshProjects(){
+  const ps=[...frame.contentDocument.querySelectorAll('.project')];
+  $('projSel').innerHTML=ps.map((p,i)=>`<option value="${i}">${p.querySelector('h3')?.textContent||'Project '+(i+1)}</option>`).join('');
+}
+function onClick(e){
+  const d=frame.contentDocument,t=e.target;
+  if(t.closest('.chip')){e.preventDefault();e.stopPropagation();if(confirm('Remove this collaborator?'))t.closest('.chip').remove();return}
+  const photo=t.closest('[data-photo-slot],img');
+  if(photo){e.preventDefault();e.stopPropagation();pending=photo;$('photoFile').click();return}
+  const el=t.closest('h1,h2,h3,p,li,summary,.eyebrow,.section-kicker,.meta,.org,.tag,.art-label,.hero-note span,.num,.collab-label');
+  if(!el||el.closest('nav,button,footer,svg,.chip')){if(t.closest('a'))e.preventDefault();return}
+  e.preventDefault();e.stopPropagation();
+  d.querySelectorAll('[contenteditable="true"]').forEach(x=>{x.contentEditable='false';x.style.outline=''});
+  el.contentEditable='true';el.style.outline='2px dashed #8a70a8';el.focus();say('Editing text…');
+}
+
+/* ---------- photos ---------- */
+const pf=document.createElement('input');pf.type='file';pf.accept='image/*';pf.id='photoFile';pf.hidden=true;document.body.appendChild(pf);
+pf.onchange=async()=>{
+  const f=pf.files[0];if(!f||!pending)return;
+  const url=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(f)});
+  const im=await new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.src=url});
+  const k=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement('canvas');
+  c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+  const data=c.toDataURL('image/jpeg',.85),d=frame.contentDocument;
+  if(pending.matches('[data-photo-slot]')){
+    const i=d.createElement('img');i.src=data;i.alt=f.name.replace(/\.[^.]+$/,'');
+    pending.replaceChildren(i);pending.style.cssText='padding:0;border:0';
+  }else{pending.src=data;pending.removeAttribute('data-path')}
+  pending=null;pf.value='';say('Photo added. Click Publish to save it.');
+};
+
+/* ---------- collaborators / projects / links ---------- */
+$('addCollab').onclick=()=>{
+  const d=frame.contentDocument,p=d.querySelectorAll('.project')[$('projSel').value],name=$('cName').value.trim();
+  if(!p||!name)return say('Enter a collaborator name first.','err');
+  const link=$('cLink').value.trim(),role=$('cRole').value.trim(),chip=d.createElement('span');chip.className='chip';
+  const n=link?d.createElement('a'):d.createElement('b');n.textContent=name;
+  if(link){n.href=/^https?:\/\//.test(link)?link:'https://'+link;n.target='_blank';n.rel='noopener'}
+  chip.appendChild(n);
+  if(role){const s=d.createElement('small');s.textContent=role;chip.appendChild(s)}
+  p.querySelector('[data-collabs]').appendChild(chip);
+  ['cName','cRole','cLink'].forEach(i=>$(i).value='');say(`Added ${name}. Click Publish to save.`);
+};
+$('dupProj').onclick=()=>{
+  const p=frame.contentDocument.querySelectorAll('.project')[$('projSel').value];if(!p)return;
+  const c=p.cloneNode(true);c.querySelector('[data-collabs]').innerHTML='';p.after(c);refreshProjects();
+  say('Project duplicated below the original. Edit its text, then Publish.');
+};
+$('applyLinks').onclick=()=>{
+  const d=frame.contentDocument,e=$('sEmail').value.trim(),l=$('sLinked').value.trim();
+  if(e)d.getElementById('emailLink').href='mailto:'+e;if(l)d.getElementById('linkedinLink').href=l;
+  say('Links updated. Click Publish to save.');
+};
+
+/* ---------- resume ---------- */
+$('resumeFile').onchange=async()=>{
+  const f=$('resumeFile').files[0];if(!f)return;
+  if(f.size>8e6)return say('PDF is over 8 MB. Please compress it.','err');
+  say('Uploading resume…');
+  try{
+    const b=new Uint8Array(await f.arrayBuffer());let s='';for(let i=0;i<b.length;i+=8192)s+=String.fromCharCode(...b.subarray(i,i+8192));
+    await put('assets/Betsy_Bejarano_Resume_Public.pdf',btoa(s),'Update resume');
+    say('Resume updated. It goes live in about a minute.','ok');
+  }catch(e){say('Resume upload failed: '+e.message,'err')}
+  $('resumeFile').value='';
+};
+
+/* ---------- publish ---------- */
+$('publish').onclick=async()=>{
+  const clone=frame.contentDocument.documentElement.cloneNode(true);
+  clone.querySelector('#adminstyle')?.remove();
+  clone.querySelectorAll('[contenteditable]').forEach(x=>x.removeAttribute('contenteditable'));
+  clone.querySelectorAll('[style]').forEach(x=>{x.style.outline='';if(!x.getAttribute('style').trim())x.removeAttribute('style')});
+  clone.querySelectorAll('img[data-path]').forEach(i=>{i.setAttribute('src',i.dataset.path);i.removeAttribute('data-path')});
+  try{
+    let n=0;
+    for(const img of clone.querySelectorAll('img[src^="data:"]')){
+      const path=`assets/photos/photo-${Date.now()}-${n++}.jpg`;
+      say(`Uploading photo ${n}…`);
+      await put(path,img.getAttribute('src').split(',')[1],'Add photo');
+      img.setAttribute('src',path);
+    }
+    say('Publishing page…');
+    await put('index.html',b64Text('<!DOCTYPE html>\n'+clone.outerHTML),'Update portfolio from admin');
+    say('Published. Your site will update in about a minute.','ok');
+  }catch(e){say('Publish failed: '+e.message,'err')}
+};
+$('reload').onclick=()=>{if(confirm('Discard unpublished changes?'))start()};
+
+cfg?start():showLogin();
+</script>
+</body>
+</html>
