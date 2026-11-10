@@ -103,8 +103,10 @@
     .small-note { color:#777985; font-size:.8rem; margin-top:14px; }
 
     .gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-    .photo-slot { min-height:190px; border:1.5px dashed #b9a9cd; border-radius:12px; background:linear-gradient(135deg,#f1edf7,#eef2f6); display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; color:#68547f; font-weight:700; cursor:default; overflow:hidden; }
-    .photo-slot img { width:100%; height:100%; min-height:190px; object-fit:cover; display:block; }
+    .photo-slot { border:1.5px dashed #b9a9cd; border-radius:12px; background:linear-gradient(135deg,#f1edf7,#eef2f6); display:flex; flex-direction:column; text-align:center; overflow:hidden; margin:0; }
+    .photo-frame { min-height:190px; display:flex; align-items:center; justify-content:center; padding:20px; color:#68547f; font-weight:700; overflow:hidden; flex:1; }
+    .photo-frame img { width:100%; height:100%; min-height:190px; object-fit:cover; display:block; }
+    .photo-slot figcaption { padding:10px 14px 12px; font-size:.82rem; line-height:1.45; color:#514367; background:#fff; border-top:1px solid #e1d8ed; }
 
     .collabs { margin-top:16px; padding-top:14px; border-top:1px solid var(--line); display:flex; gap:8px; flex-wrap:wrap; align-items:center; font-size:.84rem; }
     .collabs:has(.collab-list:empty) { display:none; }
@@ -451,8 +453,8 @@
       <div class="wrap contact-inner">
         <div><div class="section-kicker">Get in touch</div><h2>Let's connect.</h2><p>I'm always glad to meet people, learn from others, & explore opportunities to make a positive impact through engineering.</p></div>
         <div class="contact-links">
-          <a id="emailLink" href="mailto:betsybejarano2028@u.northwestern.edu">Email me ↗</a>
-          <a id="linkedinLink" href="https://www.linkedin.com/betsybejarano" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a href="https://mail.google.com/mail/?view=cm&to=betsybejarano2028@u.northwestern.edu" target="_blank" rel="noopener">Email me ↗</a>       
+        <a id="linkedinLink" href="https://www.linkedin.com/in/betsybejarano" target="_blank" rel="noopener">LinkedIn ↗</a>        
         </div>
       </div>
     </section>
